@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+
+<body class="center">
+
+    <div id='main'>
+        <div class="row">
+            <div class="col l6 offset-l3">
+                <div class="card-panel">
+
+                    <input v-model='nombre' type="text" placeholder="Nombre">
+                    <input v-model='precio' type="text" placeholder="Precio">
+                    <input v-model='unidades' type="text" placeholder="Unidades">
+
+
+
+
+                    <button @click="insert()" class="btn">
+                        Insert
+                    </button>
+                    <br><br>
+
+                    <pre>
+                      {{verdura}}  
+                    </pre>
+                    
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        new Vue({
+            el: '#main',
+            data: {
+                url_base: 'http://localhost/API_VERDURAS/',
+                verdura: [],
+                nombre:'',
+                precio:'',
+                unidades:''
+            },
+            methods: {
+                async cargar() {
+                    var data = await axios.post(this.url_base + "get_all");
+                    console.log(data.data);
+                    this.verdura = data.data;
+                },
+                async insert() {
+                    var data = new FormData();
+                    data.append("nombre", this.nombre);
+                    data.append("precio", this.precio);
+                    data.append("unidades", this.unidades);
+
+                    var resp = await axios.post(this.url_base + "insert", data);
+                    console.log(resp.data);
+                    this.cargar();
+
+                }
+            },
+
+            created() {
+                this.cargar();
+            },
+
+            mounted() {
+
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
